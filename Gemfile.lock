@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lazy_loader (0.1.20131205.17.14.46)
+    lazy_loader (0.1.20131205.21.39.25)
 
 GEM
   remote: https://rubygems.org/
