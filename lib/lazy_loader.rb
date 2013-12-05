@@ -21,21 +21,21 @@ module LazyLoader
   CREATE_METHOD_NAME = RUBY_PLATFORM =~ /java/ ? :_create_java_lazy_loader : :_create_mri_lazy_loader
 
   def self._create_java_lazy_loader(b)
-    callable = java.util.concurrent.Callable.new
-    class << callable
-      def init(b)
-        @b = b
-      end
-      def call
-        @b.call.freeze
-      end
-    end
-    callable.init(b)
-    com.centzy.util.concurrent.LazyLoader.new(callable)
+    com.centzy.util.concurrent.LazyLoader.new(CallableImpl.new(b))
   end
 
   def self._create_mri_lazy_loader(b)
     MriLazyLoader.new(b)
+  end
+
+  class CallableImpl
+    include java.util.concurrent.Callable
+    def initialize(b)
+      @b = b
+    end
+    def call
+      @b.call.freeze
+    end
   end
 
   class MriLazyLoader
