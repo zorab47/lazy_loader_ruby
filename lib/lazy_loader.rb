@@ -43,7 +43,7 @@ module LazyLoader
       @b = b
     end
     def get
-      @value ||= b.call.freeze
+      @value ||= @b.call.freeze
       @value
     end
   end
