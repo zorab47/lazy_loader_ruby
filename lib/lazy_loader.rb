@@ -28,13 +28,15 @@ module LazyLoader
     MriLazyLoader.new(b)
   end
 
-  class CallableImpl
-    include java.util.concurrent.Callable
-    def initialize(b)
-      @b = b
-    end
-    def call
-      @b.call.freeze
+  if RUBY_PLATFORM =~ /java/
+    class CallableImpl
+      include java.util.concurrent.Callable
+      def initialize(b)
+        @b = b
+      end
+      def call
+        @b.call.freeze
+      end
     end
   end
 
