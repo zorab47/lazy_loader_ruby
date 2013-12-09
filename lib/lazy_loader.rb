@@ -1,8 +1,5 @@
 # -*- encoding: utf-8 -*-
 
-lib = File.expand_path(File.dirname(__FILE__))
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-
 if RUBY_PLATFORM =~ /java/
   require 'java'
   $CLASSPATH << File.expand_path(File.join(File.dirname(__FILE__), "../ext/java/out"))
