@@ -9,6 +9,17 @@ require 'lazy_loader/version'
 
 module LazyLoader
 
+  # Create a new lazy loader.
+  #
+  # The returned object will have a #get method on it, which will only
+  # execute the specified block once, but always return the value
+  # returned from the specified block.
+  #
+  # If in JRuby, this delegates to a Java class that uses double locking
+  # and a volatile variable. Otherwise, this uses ||=.
+  #
+  # @param [Proc] b the block
+  # @return [Object] a new lazy loader
   def self.create_lazy_loader(&b)
     send(CREATE_METHOD_NAME, b)
   end
