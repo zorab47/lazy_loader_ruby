@@ -9,8 +9,8 @@ Gem::Specification.new do |gem|
   gem.version       = LazyLoader::GEM_VERSION
   gem.authors       = ["Peter Edge"]
   gem.email         = ["peter@locality.com"]
-  gem.summary       = %{LazyLoader}
-  gem.description   = %{Lazy loading for Ruby and JRuby}
+  gem.summary       = %{Lazy loading for Ruby and JRuby}
+  gem.description   = %{Lazy loading for Ruby and JRuby, uses double-locking/volatile variable for JRuby, ||= otherwise}
   gem.homepage      = "https://github.com/centzy/lazy_loader"
   gem.license       = "MIT"
 
