@@ -7,25 +7,32 @@ Lazy loading for Ruby and JRuby.
 
 Uses double-locking and a volatile variable if in JRuby, and uses ||= otherwise.
 
+nil return values are not allowed.
+
 ## Usage
 
 ```ruby
 require 'lazy_loader'
+require 'thread'          # for Queue
 
 i = 0
-
 foo = LazyLoader.create_lazy_loader do
   i += 1
   i
 end
 
-(1..100).to_a.map do |_|
+queue = Queue.new
+(1..100).map do |_|
   Thread.new do
-    foo.get     # always 1
+    queue << foo.get      # always 1
   end
 end.each do |thread|
   thread.join
 end
+
+sum = 0
+sum += queue.pop until queue.empty?
+puts sum                  # 100
 ```
 
 Written for Locality  
