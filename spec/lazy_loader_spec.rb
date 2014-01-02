@@ -33,4 +33,53 @@ describe LazyLoader do
       thread.join
     end
   end
+
+  it "throws error on nil" do
+    lazy_load = LazyLoader.create_lazy_loader do
+      nil
+    end
+
+    proc { lazy_load.get }.should raise_error(StandardError) do |e|
+      e.message.should == "nil object"
+    end
+  end
+
+  it "throws error each time on nil" do
+    lazy_load = LazyLoader.create_lazy_loader do
+      nil
+    end
+
+    (1..200).map do |_|
+      Thread.new do
+        sleep(0.0001 * Random.rand(1000))
+        proc { lazy_load.get }.should raise_error(StandardError) do |e|
+          e.message.should == "nil object"
+        end
+      end
+    end.shuffle.each do |thread|
+      thread.join
+    end
+  end
+
+  it "does not throw error on false" do
+    lazy_load = LazyLoader.create_lazy_loader do
+      false
+    end
+    lazy_load.get.should == false
+  end
+
+  it "does not throw error on false with threads" do
+    lazy_load = LazyLoader.create_lazy_loader do
+      false
+    end
+
+    (1..200).map do |_|
+      Thread.new do
+        sleep(0.0001 * Random.rand(1000))
+        lazy_load.get.should == false
+      end
+    end.shuffle.each do |thread|
+      thread.join
+    end
+  end
 end
