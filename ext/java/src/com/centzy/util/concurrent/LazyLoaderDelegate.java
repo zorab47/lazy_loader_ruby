@@ -5,13 +5,13 @@ import java.util.concurrent.Callable;
 /**
  * @author peter@locality.com (Peter Edge)
  */
-public class LazyLoader {
+public class LazyLoaderDelegate {
 
   private final Callable<Object> callable;
 
   private volatile Object object;
 
-  public LazyLoader(Callable<Object> callable) {
+  public LazyLoaderDelegate(Callable<Object> callable) {
     this.callable = callable;
   }
 

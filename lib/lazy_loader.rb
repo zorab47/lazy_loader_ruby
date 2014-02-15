@@ -19,7 +19,16 @@ module LazyLoader
     # @param [Proc] b the block
     # @return [Object] a new lazy loader
     def self.create_lazy_loader(&b)
-      com.centzy.util.concurrent.LazyLoader.new(CallableImpl.new(b))
+      DelegatingLazyLoader.new(b)
+    end
+
+    class DelegatingLazyLoader
+      def initialize(b)
+        @delegate = com.centzy.util.concurrent.LazyLoaderDelegate.new(CallableImpl.new(b))
+      end
+      def get
+        @delegate.get.get_wrapped_object
+      end
     end
 
     class CallableImpl
@@ -30,7 +39,18 @@ module LazyLoader
       def call
         value = @b.call.freeze
         raise StandardError.new("nil object") if value == nil
-        value
+        ObjectWrapper.new(value)
+      end
+    end
+
+    # This needs to be done so that JRuby doesn't convert certain objects,
+    # i.e. Strings encoded with Encoding::BINARY
+    class ObjectWrapper
+      def initialize(o)
+        @o = o
+      end
+      def get_wrapped_object
+        @o
       end
     end
   else
