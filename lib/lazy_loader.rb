@@ -5,7 +5,14 @@ require 'lazy_loader/version'
 module LazyLoader
   if RUBY_ENGINE == 'jruby'
     require 'java'
-    $CLASSPATH << File.expand_path(File.join(File.dirname(__FILE__), "../ext/java/out"))
+    require 'tempfile'
+
+    java_out = Dir.mktmpdir
+    base_dir = File.expand_path(File.join(File.dirname(__FILE__), '../ext/java/src/com/centzy/lazyloader'))
+    javac_cmd = "javac -d #{java_out} #{File.join(base_dir, 'LazyLoaderDelegate.java')} #{File.join(base_dir, 'LazyLoaderException.java')}"
+    rc = system(javac_cmd)
+    raise StandardError.new("#{javac_cmd}: #{$?.exitstatus.to_s}") unless rc
+    $CLASSPATH << java_out
 
     # Create a new lazy loader.
     #

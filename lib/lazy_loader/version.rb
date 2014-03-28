@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
 
 module LazyLoader
-  GEM_VERSION = '1.1.20140328.21.27.48'
+  GEM_VERSION = '2.0.20140328.22.32.05'
 end
