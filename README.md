@@ -3,9 +3,9 @@ lazy_loader
 
 [![Build Status](https://travis-ci.org/peter-edge/lazy_loader_ruby.png?branch=master)](https://travis-ci.org/peter-edge/lazy_loader_ruby)
 
-Lazy loading for Ruby and JRuby.
+Lazy loading for MRI Ruby and JRuby.
 
-Uses double-locking and a volatile variable if in JRuby, and uses ||= otherwise.
+Uses double-locking and a volatile variable if in JRuby, and uses ||= in MRI Ruby.
 
 nil return values are not allowed.
 
