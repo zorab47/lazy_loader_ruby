@@ -3,7 +3,7 @@
 require 'lazy_loader/version'
 
 module LazyLoader
-  if RUBY_PLATFORM =~ /java/
+  if RUBY_ENGINE == 'jruby'
     require 'java'
     $CLASSPATH << File.expand_path(File.join(File.dirname(__FILE__), "../ext/java/out"))
 
@@ -53,7 +53,7 @@ module LazyLoader
         @o
       end
     end
-  else
+  elsif RUBY_ENGINE == 'ruby'
     def self.create_lazy_loader(&b)
       OrEqualsLazyLoader.new(b)
     end
@@ -68,5 +68,7 @@ module LazyLoader
         @value
       end
     end
+  else
+    raise StandardError.new("LazyLoader is only usable for JRuby and Ruby (are you using Rubinus?)")
   end
 end
