@@ -7,8 +7,6 @@ Lazy loading for MRI Ruby and JRuby.
 
 Uses double-locking and a volatile variable if in JRuby, and uses ||= in MRI Ruby.
 
-nil return values are not allowed.
-
 ## Usage
 
 ```ruby
