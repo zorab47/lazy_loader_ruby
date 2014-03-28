@@ -27,7 +27,12 @@ module LazyLoader
         @delegate = com.centzy.lazyloader.LazyLoaderDelegate.new(CallableImpl.new(b))
       end
       def get
-        @delegate.get.get_wrapped_object
+        result = @delegate.get
+        begin
+          result.get_wrapped_object
+        rescue com.centzy.lazyloader.LazyLoaderException => e
+          raise StandardError.new(e.get_message)
+        end
       end
     end
 
@@ -61,17 +66,24 @@ module LazyLoader
         @b = b
       end
       def get
-        @value ||= ObjectWrapper.new(@b.call.freeze)
+        @value ||= ObjectWrapper.new(@b)
         @value.get_wrapped_object
       end
     end
 
     # This is so we can have nil objects
     class ObjectWrapper
-      def initialize(o)
-        @o = o
+      def initialize(b)
+        begin
+          @o = b.call.freeze
+          @e = nil
+        rescue StandardError => e
+          @o = nil
+          @e = e
+        end
       end
       def get_wrapped_object
+        raise @e if @e != nil
         @o
       end
     end

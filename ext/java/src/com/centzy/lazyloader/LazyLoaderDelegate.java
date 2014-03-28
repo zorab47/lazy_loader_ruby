@@ -15,7 +15,7 @@ public class LazyLoaderDelegate {
     this.callable = callable;
   }
 
-  public Object get() {
+  public Object get() throws LazyLoaderException {
     LazyLoaderResult result = lazyLoaderResult;
     if (result == null) {
       synchronized (this) {
@@ -24,7 +24,7 @@ public class LazyLoaderDelegate {
           try {
             lazyLoaderResult = result = new LazyLoaderResult(callable.call(), null);
           } catch (Exception e) {
-            lazyLoaderResult = result = new LazyLoaderResult(null, new RuntimeException(e));
+            lazyLoaderResult = result = new LazyLoaderResult(null, new LazyLoaderException(e));
           }
         }
       }
@@ -35,16 +35,16 @@ public class LazyLoaderDelegate {
   private static class LazyLoaderResult {
 
     private final Object object;
-    private final RuntimeException runtimeException;
+    private final LazyLoaderException lazyLoaderException;
 
-    LazyLoaderResult(Object object, RuntimeException runtimeException) {
+    LazyLoaderResult(Object object, LazyLoaderException lazyLoaderException) {
       this.object = object;
-      this.runtimeException = runtimeException;
+      this.lazyLoaderException = lazyLoaderException;
     }
 
-    Object get() {
-      if (runtimeException != null) {
-        throw runtimeException;
+    Object get() throws LazyLoaderException {
+      if (lazyLoaderException != null) {
+        throw lazyLoaderException;
       }
       return object;
     }

@@ -34,17 +34,15 @@ describe LazyLoader do
     end
   end
 
-  it "throws error on nil" do
+  it "allows nil" do
     lazy_load = LazyLoader.create_lazy_loader do
       nil
     end
 
-    proc { lazy_load.get }.should raise_error(StandardError) do |e|
-      e.message.should == "nil object"
-    end
+    lazy_load.get.should == nil
   end
 
-  it "throws error each time on nil" do
+  it "allows nil each time" do
     lazy_load = LazyLoader.create_lazy_loader do
       nil
     end
@@ -52,9 +50,7 @@ describe LazyLoader do
     (1..200).map do |_|
       Thread.new do
         sleep(0.0001 * Random.rand(1000))
-        proc { lazy_load.get }.should raise_error(StandardError) do |e|
-          e.message.should == "nil object"
-        end
+        lazy_load.get.should == nil
       end
     end.shuffle.each do |thread|
       thread.join
@@ -77,6 +73,35 @@ describe LazyLoader do
       Thread.new do
         sleep(0.0001 * Random.rand(1000))
         lazy_load.get.should == false
+      end
+    end.shuffle.each do |thread|
+      thread.join
+    end
+  end
+
+  it "throws an error" do
+    lazy_load = LazyLoader.create_lazy_loader do
+      raise StandardError.new("test_message")
+    end
+
+    proc { lazy_load.get }.should raise_error(StandardError) do |e|
+      e.message.should == "test_message"
+    end
+  end
+
+  it "throws an error each time" do
+    i = 0
+    lazy_load = LazyLoader.create_lazy_loader do
+      i += 1
+      raise StandardError.new("test_message#{i}")
+    end
+
+    (1..200).map do |_|
+      Thread.new do
+        sleep(0.0001 * Random.rand(1000))
+        proc { lazy_load.get }.should raise_error(StandardError) do |e|
+          e.message.should == "test_message1"
+        end
       end
     end.shuffle.each do |thread|
       thread.join
