@@ -1,7 +1,7 @@
 lazy_loader
 ========
 
-[![Build Status](https://travis-ci.org/peter-edge/lazy_loader.png?branch=master)](https://travis-ci.org/peter-edge/lazy_loader)
+[![Build Status](https://travis-ci.org/peter-edge/lazy_loader_ruby.png?branch=master)](https://travis-ci.org/peter-edge/lazy_loader_ruby)
 
 Lazy loading for Ruby and JRuby.
 

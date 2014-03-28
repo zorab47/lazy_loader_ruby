@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["peter@locality.com"]
   gem.summary       = %{Lazy loading for Ruby and JRuby}
   gem.description   = %{Lazy loading for Ruby and JRuby, uses double-locking/volatile variable for JRuby, ||= otherwise}
-  gem.homepage      = "https://github.com/peter-edge/lazy_loader"
+  gem.homepage      = "https://github.com/peter-edge/lazy_loader_ruby"
   gem.license       = "MIT"
 
   gem.files         = `git ls-files`.split($/)
