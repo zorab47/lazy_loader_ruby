@@ -14,7 +14,7 @@ module LazyLoader
     # returned from the specified block.
     #
     # If in JRuby, this delegates to a Java class that uses double locking
-    # and a volatile variable. Otherwise, this uses ||=.
+    # and a volatile variable. In MRI Ruby, this uses ||=.
     #
     # @param [Proc] b the block
     # @return [Object] a new lazy loader
@@ -24,7 +24,7 @@ module LazyLoader
 
     class DelegatingLazyLoader
       def initialize(b)
-        @delegate = com.centzy.util.concurrent.LazyLoaderDelegate.new(CallableImpl.new(b))
+        @delegate = com.centzy.lazyloader.LazyLoaderDelegate.new(CallableImpl.new(b))
       end
       def get
         @delegate.get.get_wrapped_object
@@ -37,9 +37,7 @@ module LazyLoader
         @b = b
       end
       def call
-        value = @b.call.freeze
-        raise StandardError.new("nil object") if value == nil
-        ObjectWrapper.new(value)
+        ObjectWrapper.new(@b.call.freeze)
       end
     end
 
@@ -63,9 +61,18 @@ module LazyLoader
         @b = b
       end
       def get
-        @value ||= @b.call.freeze
-        raise StandardError.new("nil object") if @value == nil
-        @value
+        @value ||= ObjectWrapper.new(@b.call.freeze)
+        @value.get_wrapped_object
+      end
+    end
+
+    # This is so we can have nil objects
+    class ObjectWrapper
+      def initialize(o)
+        @o = o
+      end
+      def get_wrapped_object
+        @o
       end
     end
   else
