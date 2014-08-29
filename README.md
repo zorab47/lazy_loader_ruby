@@ -11,7 +11,7 @@ Uses double-locking and a volatile variable if in JRuby, and uses ||= in MRI Rub
 
 ```ruby
 require 'lazy_loader'
-require 'thread'          # for Queue
+require 'thread'        # for Queue
 
 i = 0
 foo = LazyLoader.create_lazy_loader do
@@ -22,7 +22,7 @@ end
 queue = Queue.new
 (1..100).map do |_|
   Thread.new do
-    queue << foo.get      # always 1
+    queue << foo.get    # always 1
   end
 end.each do |thread|
   thread.join
@@ -30,7 +30,7 @@ end
 
 sum = 0
 sum += queue.pop until queue.empty?
-puts sum                  # 100
+puts sum                # 100
 ```
 
 Written for Locality  
