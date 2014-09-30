@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.name          = "lazy_loader"
   gem.version       = LazyLoader::GEM_VERSION
   gem.authors       = ["Peter Edge"]
-  gem.email         = ["peter@locality.com"]
+  gem.email         = ["peter.edge@gmail.com"]
   gem.summary       = %{Lazy loading for MRI Ruby and JRuby}
   gem.description   = %{Lazy loading for MRI Ruby and JRuby, uses double-locking/volatile variable for JRuby, ||= for MRI Ruby}
   gem.homepage      = "https://github.com/peter-edge/lazy_loader_ruby"

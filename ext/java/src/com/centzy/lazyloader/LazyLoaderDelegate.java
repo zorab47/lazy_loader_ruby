@@ -3,7 +3,7 @@ package com.centzy.lazyloader;
 import java.util.concurrent.Callable;
 
 /**
- * @author Peter Edge (peter@locality.com).
+ * @author Peter Edge (peter.edge@gmail.com).
  */
 public class LazyLoaderDelegate {
 
