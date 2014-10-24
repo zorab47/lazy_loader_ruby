@@ -13,8 +13,8 @@ describe LazyLoader do
       i
     end
 
-    lazy_load.get.should == 1
-    lazy_load.get.should == 1
+    expect(lazy_load.get).to eq(1)
+    expect(lazy_load.get).to eq(1)
   end
 
   it "performs basic operations with threads" do
@@ -27,7 +27,7 @@ describe LazyLoader do
     (1..200).map do |_|
       Thread.new do
         sleep(0.0001 * Random.rand(1000))
-        lazy_load.get.should == 1
+        expect(lazy_load.get).to eq(1)
       end
     end.shuffle.each do |thread|
       thread.join
@@ -39,7 +39,7 @@ describe LazyLoader do
       nil
     end
 
-    lazy_load.get.should == nil
+    expect(lazy_load.get).to be_nil
   end
 
   it "allows nil each time" do
@@ -50,7 +50,7 @@ describe LazyLoader do
     (1..200).map do |_|
       Thread.new do
         sleep(0.0001 * Random.rand(1000))
-        lazy_load.get.should == nil
+        expect(lazy_load.get).to eq(nil)
       end
     end.shuffle.each do |thread|
       thread.join
@@ -61,7 +61,7 @@ describe LazyLoader do
     lazy_load = LazyLoader.create_lazy_loader do
       false
     end
-    lazy_load.get.should == false
+    expect(lazy_load.get).to eq(false)
   end
 
   it "does not throw error on false with threads" do
@@ -72,7 +72,7 @@ describe LazyLoader do
     (1..200).map do |_|
       Thread.new do
         sleep(0.0001 * Random.rand(1000))
-        lazy_load.get.should == false
+        expect(lazy_load.get).to eq(false)
       end
     end.shuffle.each do |thread|
       thread.join
@@ -84,8 +84,8 @@ describe LazyLoader do
       raise StandardError.new("test_message")
     end
 
-    proc { lazy_load.get }.should raise_error(StandardError) do |e|
-      e.message.should == "test_message"
+    expect(proc { lazy_load.get }).to raise_error(StandardError) do |e|
+      expect(e.message).to match(/test_message/)
     end
   end
 
@@ -99,8 +99,8 @@ describe LazyLoader do
     (1..200).map do |_|
       Thread.new do
         sleep(0.0001 * Random.rand(1000))
-        proc { lazy_load.get }.should raise_error(StandardError) do |e|
-          e.message.should == "test_message1"
+        expect(proc { lazy_load.get }).to raise_error(StandardError) do |e|
+          expect(e.message).to match(/test_message1/)
         end
       end
     end.shuffle.each do |thread|
