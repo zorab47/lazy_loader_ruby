@@ -132,6 +132,7 @@ describe LazyLoader do
 
   it "works for lazy_reader" do
     lazy_read = LazyRead.new(1, 2)
+    lazy_read_addl = LazyRead.new(1, 2)
     lazy_read_two = LazyReadTwo.new(1, 2)
     lazy_read_child = LazyRead.new(3, 4)
 
@@ -140,6 +141,8 @@ describe LazyLoader do
         sleep(0.0001 * Random.rand(1000))
         expect(lazy_read.foo).to eq(2)
         expect(lazy_read.bar).to eq(3)
+        expect(lazy_read_addl.foo).to eq(2)
+        expect(lazy_read_addl.bar).to eq(3)
         expect(lazy_read_two.foo).to eq(3)
         expect(lazy_read_two.bar).to eq(4)
         expect(lazy_read_child.foo).to eq(4)

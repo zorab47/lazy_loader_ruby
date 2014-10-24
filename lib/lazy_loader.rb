@@ -31,25 +31,25 @@ module LazyLoader
 end
 
 class Class
-    alias :original_new :new
+  alias :original_new :new
 
-    def new(*args, &block)
-      obj = original_new(*args, &block)
-      if !__symbol_to_lazy_reader_lazy_loader_create_lambda__.empty?
-        obj.instance_variable_set(
-          :@__symbol_to_lazy_reader_lazy_loader__,
-          __symbol_to_lazy_reader_lazy_loader_create_lambda__.inject(Hash.original_new) do |hash, (symbol, lazy_reader_lazy_loader_create_lambda)|
-            hash[symbol] = lazy_reader_lazy_loader_create_lambda.call(obj)
-            hash
-          end
-        )
-      end
-      obj
+  def new(*args, &block)
+    obj = original_new(*args, &block)
+    if !__symbol_to_lazy_reader_lazy_loader_create_lambda__.empty?
+      obj.instance_variable_set(
+        :@__symbol_to_lazy_reader_lazy_loader__,
+        __symbol_to_lazy_reader_lazy_loader_create_lambda__.inject(Hash.original_new) do |hash, (symbol, lazy_reader_lazy_loader_create_lambda)|
+          hash[symbol] = lazy_reader_lazy_loader_create_lambda.call(obj)
+          hash
+        end
+      )
     end
+    obj
+  end
 
-    def __symbol_to_lazy_reader_lazy_loader_create_lambda__
-      @__symbol_to_lazy_reader_lazy_loader_create_lambda__ ||= Hash.original_new
-    end
+  def __symbol_to_lazy_reader_lazy_loader_create_lambda__
+    @__symbol_to_lazy_reader_lazy_loader_create_lambda__ ||= Hash.original_new
+  end
 
   def lazy_reader(*symbols)
     symbols.each do |symbol|
