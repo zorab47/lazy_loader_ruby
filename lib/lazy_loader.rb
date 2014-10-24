@@ -29,3 +29,42 @@ module LazyLoader
     LazyLoader.create_lazy_loader(&b)
   end
 end
+
+class Class
+    alias :original_new :new
+
+    def new(*args, &block)
+      obj = original_new(*args, &block)
+      if !__symbol_to_lazy_reader_lazy_loader_create_lambda__.empty?
+        obj.instance_variable_set(
+          :@__symbol_to_lazy_reader_lazy_loader__,
+          __symbol_to_lazy_reader_lazy_loader_create_lambda__.inject(Hash.original_new) do |hash, (symbol, lazy_reader_lazy_loader_create_lambda)|
+            hash[symbol] = lazy_reader_lazy_loader_create_lambda.call(obj)
+            hash
+          end
+        )
+      end
+      obj
+    end
+
+    def __symbol_to_lazy_reader_lazy_loader_create_lambda__
+      @__symbol_to_lazy_reader_lazy_loader_create_lambda__ ||= Hash.original_new
+    end
+
+  def lazy_reader(*symbols)
+    symbols.each do |symbol|
+      class_eval <<-EOF, __FILE__, __LINE__ + 1
+        __symbol_to_lazy_reader_lazy_loader_create_lambda__[:#{symbol}] = lambda do |instance|
+          LazyLoader.create_lazy_loader do
+            raise StandardError.new("You must define load_#{symbol} for \#{instance.class.name}") unless instance.respond_to?(:load_#{symbol})
+            instance.load_#{symbol}
+          end
+        end
+
+        def #{symbol}
+          @__symbol_to_lazy_reader_lazy_loader__[:#{symbol}].get
+        end
+      EOF
+    end
+  end
+end

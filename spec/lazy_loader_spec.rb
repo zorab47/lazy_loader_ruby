@@ -129,4 +129,24 @@ describe LazyLoader do
     expect(lazy_load.get).to eq(1)
     expect(lazy_load.get).to eq(1)
   end
+
+  it "works for lazy_reader" do
+    lazy_read = LazyRead.new(1, 2)
+    lazy_read_two = LazyReadTwo.new(1, 2)
+    lazy_read_child = LazyRead.new(3, 4)
+
+    (1..200).map do |_|
+      Thread.new do
+        sleep(0.0001 * Random.rand(1000))
+        expect(lazy_read.foo).to eq(2)
+        expect(lazy_read.bar).to eq(3)
+        expect(lazy_read_two.foo).to eq(3)
+        expect(lazy_read_two.bar).to eq(4)
+        expect(lazy_read_child.foo).to eq(4)
+        expect(lazy_read_child.bar).to eq(5)
+      end
+    end.shuffle.each do |thread|
+      thread.join
+    end
+  end
 end
