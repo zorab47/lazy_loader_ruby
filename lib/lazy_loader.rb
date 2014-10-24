@@ -51,6 +51,31 @@ class Class
     @__symbol_to_lazy_reader_lazy_loader_create_lambda__ ||= Hash.original_new
   end
 
+  # Define a lazy-loaded object.
+  #
+  # Example:
+  #
+  # class Test
+  #   lazy_reader :foo
+  #   attr_reader :something
+  #
+  #   def initialize(something)
+  #     \@something = something
+  #   end
+  #
+  #   def load_foo
+  #     \@something += 1
+  #     \@something
+  #   end
+  # end
+  #
+  # test = Test.new(1)
+  # test.foo # 2
+  # test.foo # 2
+  # test.something # 2
+  #
+  # @param [Array] symbols the names of the lazy-loaded objects to define
+  # @return nil
   def lazy_reader(*symbols)
     symbols.each do |symbol|
       class_eval <<-EOF, __FILE__, __LINE__ + 1
@@ -66,5 +91,6 @@ class Class
         end
       EOF
     end
+    nil
   end
 end
