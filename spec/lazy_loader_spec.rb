@@ -107,4 +107,26 @@ describe LazyLoader do
       thread.join
     end
   end
+
+  it "works when LazyLoader is included in a class" do
+    i = 0
+    lazy_load = IncludeLazyLoader.new.create do
+      i += 1
+      i
+    end
+
+    expect(lazy_load.get).to eq(1)
+    expect(lazy_load.get).to eq(1)
+  end
+
+  it "works when LazyLoader is self included in a class" do
+    i = 0
+    lazy_load = SelfIncludeLazyLoader.create do
+      i += 1
+      i
+    end
+
+    expect(lazy_load.get).to eq(1)
+    expect(lazy_load.get).to eq(1)
+  end
 end

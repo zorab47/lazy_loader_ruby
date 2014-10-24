@@ -19,6 +19,10 @@ module LazyLoader
     DelegatingLazyLoader.new(b)
   end
 
+  def create_lazy_loader(&b)
+    LazyLoader.create_lazy_loader(&b)
+  end
+
   ### private ###
 
   class DelegatingLazyLoader
