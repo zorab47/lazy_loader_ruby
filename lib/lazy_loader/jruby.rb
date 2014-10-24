@@ -5,8 +5,6 @@ require 'tempfile'
 
 module LazyLoader
 
-  _compile_and_require_java_sources(File.join(File.dirname(__FILE__), '../ext/java/src/com/centzy/lazyloader'))
-
   # Create a new lazy loader.
   #
   # The returned object will have a #get method on it, which will only
@@ -63,11 +61,13 @@ module LazyLoader
     java_source_paths = Dir.entries(java_source_dir_path).select do |java_source_path|
       java_source_path =~ /\.java$/
     end.map do |java_source_path|
-      File.expand_path(File.join(java_source_dir_path), java_source_path)
+      File.expand_path(File.join(java_source_dir_path, java_source_path))
     end
     javac_cmd = "javac -d #{java_out} #{java_source_paths.join(' ')}"
     rc = system(javac_cmd)
     raise StandardError.new("#{javac_cmd}: #{$?.exitstatus.to_s}") unless rc
     $CLASSPATH << java_out
   end
+
+  _compile_and_require_java_sources(File.join(File.dirname(__FILE__), '../../ext/java/src/com/centzy/lazyloader'))
 end
