@@ -5,25 +5,9 @@ require 'tempfile'
 
 module LazyLoader
 
-  # Create a new lazy loader.
-  #
-  # The returned object will have a #get method on it, which will only
-  # execute the specified block once, but always return the value
-  # returned from the specified block.
-  #
-  # This delegates to a Java class that uses double locking and a volatile variable.
-  #
-  # @param [Proc] b the block
-  # @return [Object] a new lazy loader
-  def self.create_lazy_loader(&b)
+  def self._create_lazy_loader(&b)
     DelegatingLazyLoader.new(b)
   end
-
-  def create_lazy_loader(&b)
-    LazyLoader.create_lazy_loader(&b)
-  end
-
-  ### private ###
 
   class DelegatingLazyLoader
     def initialize(b)

@@ -2,21 +2,9 @@
 
 module LazyLoader
 
-  # Create a new lazy loader.
-  #
-  # The returned object will have a #get method on it, which will only
-  # execute the specified block once, but always return the value
-  # returned from the specified block.
-  #
-  # This uses ||=.
-  #
-  # @param [Proc] b the block
-  # @return [Object] a new lazy loader
-  def self.create_lazy_loader(&b)
+  def self._create_lazy_loader(&b)
     OrEqualsLazyLoader.new(b)
   end
-
-  ### private ###
 
   class OrEqualsLazyLoader
     def initialize(b)
